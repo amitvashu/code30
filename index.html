@@ -29,6 +29,7 @@
     --surface-2: #EDF0F8;
     --ink:       #141A2E;
     --muted:     #5F6982;
+    --faint:     #9AA3BC;
     --hair:      #DCE1EF;
     --py:        #B87D05;
     --py-soft:   #FBF1D8;
@@ -50,6 +51,7 @@
       --surface-2: #1C2340;
       --ink:       #E8ECFB;
       --muted:     #8A95B7;
+      --faint:     #5A6488;
       --hair:      #262E51;
       --py:        #F0C24B;
       --py-soft:   #2E2611;
@@ -71,6 +73,7 @@
     --surface-2: #1C2340;
     --ink:       #E8ECFB;
     --muted:     #8A95B7;
+    --faint:     #5A6488;
     --hair:      #262E51;
     --py:        #F0C24B;
     --py-soft:   #2E2611;
@@ -106,10 +109,15 @@
     gap: 24px;
   }
 
+  .mono {
+    font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
   /* ---------- header ---------- */
   header { display: grid; gap: 4px; }
   .eyebrow {
-    font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: .14em;
@@ -151,6 +159,7 @@
     text-transform: uppercase;
     color: var(--muted);
   }
+  .panel-head .aside { font-size: 12px; color: var(--faint); }
   .linkish {
     appearance: none;
     background: none;
@@ -191,19 +200,25 @@
     border: 2px solid var(--hair);
     display: grid;
     place-items: center;
-    transition: background .12s ease, border-color .12s ease, transform .12s ease;
+    transition: background .12s ease, border-color .12s ease;
   }
   .box svg { width: 15px; height: 15px; stroke: #fff; stroke-width: 3.2; fill: none;
              stroke-linecap: round; stroke-linejoin: round;
              opacity: 0; transform: scale(.6); transition: opacity .12s ease, transform .12s ease; }
 
-  .row .name { font-weight: 600; flex: 1 1 auto; }
   .row .mins {
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 13px;
     font-variant-numeric: tabular-nums;
     color: var(--muted);
     flex: none;
+  }
+  .namewrap { flex: 1 1 auto; min-width: 0; }
+  .namewrap .name { display: block; font-weight: 600; }
+  .tag {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px; font-weight: 700; letter-spacing: .1em;
+    display: block;
   }
 
   .row input:focus-visible + .box { outline: 2px solid var(--ring); outline-offset: 3px; }
@@ -218,13 +233,6 @@
   li[data-t="p"] .tag { color: var(--py); }
   li[data-t="c"] .tag { color: var(--cpp); }
   li[data-t="x"] .tag { color: var(--prac); }
-  .tag {
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 10px; font-weight: 700; letter-spacing: .1em;
-    display: block;
-  }
-  .namewrap { flex: 1 1 auto; min-width: 0; }
-  .namewrap .name { display: block; }
 
   .daybar {
     display: flex;
@@ -236,22 +244,44 @@
     background: var(--surface-2);
     font-size: 13px;
   }
-  .daybar .n {
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-variant-numeric: tabular-nums;
-    font-weight: 700;
-  }
+  .daybar .n { font-weight: 700; }
   .verdict { font-weight: 700; }
   .verdict[data-s="done"] { color: var(--good); }
   .verdict[data-s="part"] { color: var(--py); }
   .verdict[data-s="none"] { color: var(--muted); }
 
-  /* ---------- stats ---------- */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+  /* ---------- challenge progress ---------- */
+  .chal { padding: 15px 18px 17px; display: grid; gap: 10px; }
+  .chal-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .chal-top .lab {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent);
   }
+  .chal-top .pos { font-size: 13px; font-weight: 700; }
+  .meter {
+    height: 9px;
+    border-radius: 99px;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+  .meter i {
+    display: block; height: 100%; width: 0;
+    border-radius: 99px;
+    background: var(--accent);
+    transition: width .25s ease;
+  }
+  .meter.is-done i { background: var(--good); }
+  .chal-foot { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--muted); }
+  .chal-foot b { color: var(--ink); font-weight: 700; }
+  .pace { font-weight: 700; }
+  .pace[data-s="ahead"] { color: var(--good); }
+  .pace[data-s="ok"]    { color: var(--accent); }
+  .pace[data-s="behind"]{ color: var(--py); }
+  .pace[data-s="late"]  { color: var(--miss); }
+
+  /* ---------- stats ---------- */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .stat {
     background: var(--surface);
     border: 1px solid var(--hair);
@@ -272,49 +302,101 @@
   }
   .stat .v small { font-size: 12px; font-weight: 400; color: var(--muted); }
   #s-streak .v { color: var(--py); }
+  #s-best   .v { color: var(--prac); }
   #s-days   .v { color: var(--good); }
   #s-hours  .v { color: var(--cpp); }
-  #s-pct    .v { color: var(--prac); }
 
-  /* ---------- 30-day grid ---------- */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
-    padding: 16px 18px 18px;
+  /* ---------- calendar ---------- */
+  .cal { padding: 6px 14px 16px; display: grid; gap: 6px; }
+  .cal-month { display: grid; gap: 6px; padding-top: 10px; }
+  .cal-month + .cal-month { border-top: 1px solid var(--hair); padding-top: 14px; }
+  .cal-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 10px; padding: 0 4px;
   }
-  .cell {
+  .cal-head .m { font-weight: 800; font-size: 15px; letter-spacing: -.01em; }
+  .cal-head .c {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; color: var(--faint); font-variant-numeric: tabular-nums;
+  }
+  .dows, .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+  .dows span {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 9.5px; font-weight: 700; letter-spacing: .06em;
+    color: var(--faint); text-align: center; text-transform: uppercase;
+  }
+
+  .cal-cell, .cal-blank {
+    border-radius: 9px;
+    min-height: 46px;
+    padding: 5px 5px 4px;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    justify-items: center;
+    gap: 3px;
+  }
+  .cal-blank { visibility: hidden; }
+  .cal-cell {
     appearance: none;
+    font: inherit;
+    cursor: pointer;
     background: var(--surface-2);
     border: 1px solid transparent;
-    border-radius: 10px;
-    padding: 8px 6px 7px;
-    display: grid;
-    gap: 5px;
-    justify-items: center;
-    cursor: pointer;
-    font: inherit;
     color: var(--muted);
+    position: relative;
     transition: transform .1s ease, border-color .1s ease;
   }
-  .cell:hover { transform: translateY(-1px); }
-  .cell:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-  .cell .d {
+  .cal-cell:hover { transform: translateY(-1px); }
+  .cal-cell:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  .cal-cell[disabled] { cursor: default; background: transparent; opacity: .3; }
+  .cal-cell[disabled]:hover { transform: none; }
+
+  .cal-cell .dom {
     font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+    line-height: 1.2;
   }
-  .pips { display: flex; gap: 3px; }
+  .cal-cell .cd {
+    position: absolute; top: 3px; right: 5px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 8px; font-weight: 700; color: var(--accent); opacity: .8;
+  }
+  .pips { display: flex; gap: 3px; align-self: center; }
   .pip { width: 6px; height: 6px; border-radius: 50%; background: var(--hair); }
   .pip[data-on="p"] { background: var(--py); }
   .pip[data-on="c"] { background: var(--cpp); }
   .pip[data-on="x"] { background: var(--prac); }
 
-  .cell[data-state="done"]    { background: var(--good-soft); color: var(--good); }
-  .cell[data-state="missed"]  { border-color: var(--hair); background: transparent; }
-  .cell[data-state="missed"] .d { color: var(--miss); }
-  .cell[data-state="future"]  { background: transparent; border-color: var(--hair); opacity: .55; }
-  .cell[data-today="1"]       { border-color: var(--ring); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 22%, transparent); }
-  .cell[data-sel="1"]         { border-color: var(--ink); }
+  /* A pseudo-element, not a box-shadow, so the "today" ring can't wipe it out.
+     On narrow screens this bar is the only challenge marker — the D-labels hide. */
+  .cal-cell[data-chal="1"]::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 24%; right: 24%;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: var(--accent);
+  }
+  .cal-cell[data-state="done"]   { background: var(--good-soft); color: var(--good); }
+  .cal-cell[data-state="missed"] { background: transparent; border-color: var(--hair); }
+  .cal-cell[data-state="missed"] .dom { color: var(--miss); }
+  .cal-cell[data-state="future"] { background: transparent; border-color: var(--hair); }
+  .cal-cell[data-today="1"] {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ring) 22%, transparent);
+  }
+  .cal-cell[data-sel="1"] { border-color: var(--ink); }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 6px 16px;
+    padding: 12px 18px; border-top: 1px solid var(--hair);
+    font-size: 11.5px; color: var(--muted);
+  }
+  .legend b { color: var(--accent); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; }
+  .legend .key-chal {
+    display: inline-block; width: 14px; height: 3px; border-radius: 2px;
+    background: var(--accent); vertical-align: middle; margin-right: 2px;
+  }
 
   /* ---------- footer ---------- */
   footer { display: grid; gap: 10px; }
@@ -325,19 +407,15 @@
     border: 1px solid var(--hair);
     border-radius: 9px;
     padding: 8px 13px;
-    font: inherit;
-    font-size: 13px;
-    font-weight: 600;
+    font: inherit; font-size: 13px; font-weight: 600;
     color: var(--ink);
     cursor: pointer;
   }
   .btn:hover { background: var(--surface-2); }
   .btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
   .note { margin: 0; font-size: 12.5px; color: var(--muted); }
-  .note code {
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 12px;
-  }
+  .note code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; }
+
   #toast {
     position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(8px);
     background: var(--ink); color: var(--bg);
@@ -349,9 +427,14 @@
   }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+  @media (max-width: 520px) {
+    .cal-cell .cd { display: none; }
+    .cal-cell, .cal-blank { min-height: 40px; }
+    .cal { padding: 6px 10px 14px; }
+    .dows, .cal-grid { gap: 4px; }
+  }
   @media (max-width: 460px) {
     .stats { grid-template-columns: repeat(2, 1fr); }
-    .grid  { grid-template-columns: repeat(5, 1fr); }
   }
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
@@ -432,24 +515,44 @@
       </li>
     </ul>
     <div class="daybar">
-      <span><span class="n" id="daymins">0</span> of <span class="n">150</span> min</span>
+      <span><span class="n mono" id="daymins">0</span> of <span class="n mono">150</span> min</span>
       <span class="verdict" id="verdict" data-s="none">Nothing logged yet</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="chal">
+      <div class="chal-top">
+        <span class="lab">30-Day Challenge</span>
+        <span class="pos mono" id="chal-pos">Day 1 of 30</span>
+      </div>
+      <div class="meter" id="chal-meter"><i id="chal-fill"></i></div>
+      <div class="chal-foot">
+        <span><b class="mono" id="chal-hours">0.0</b> of <b class="mono">75</b> hours</span>
+        <span><b class="mono" id="chal-days">0</b> of <b class="mono">30</b> full days</span>
+        <span class="pace" id="chal-pace" data-s="ok">Day 1 — off we go</span>
+      </div>
     </div>
   </section>
 
   <section class="stats">
     <div class="stat" id="s-streak"><span class="k">Streak</span><span class="v" id="v-streak">0<small> d</small></span></div>
-    <div class="stat" id="s-days"><span class="k">Full days</span><span class="v" id="v-days">0<small> /30</small></span></div>
-    <div class="stat" id="s-hours"><span class="k">Hours</span><span class="v" id="v-hours">0<small> /75</small></span></div>
-    <div class="stat" id="s-pct"><span class="k">Complete</span><span class="v" id="v-pct">0<small>%</small></span></div>
+    <div class="stat" id="s-best"><span class="k">Best run</span><span class="v" id="v-best">0<small> d</small></span></div>
+    <div class="stat" id="s-days"><span class="k">Full days</span><span class="v" id="v-days">0<small> /131</small></span></div>
+    <div class="stat" id="s-hours"><span class="k">Hours</span><span class="v" id="v-hours">0<small> /328</small></span></div>
   </section>
 
   <section class="panel">
     <div class="panel-head">
-      <h2>All 30 days</h2>
-      <span class="sub" style="font-size:12px">tap a day to edit it</span>
+      <h2>23 Aug &rarr; 31 Dec 2026</h2>
+      <span class="aside">tap any day to edit it</span>
     </div>
-    <div class="grid" id="grid"></div>
+    <div class="cal" id="calendar"></div>
+    <div class="legend">
+      <span><i class="key-chal"></i> blue bar = a challenge day (<b>D1</b>&ndash;<b>D30</b>)</span>
+      <span>3 dots = the 3 tracks</span>
+      <span>green = the full 150 min</span>
+    </div>
   </section>
 
   <footer>
@@ -461,7 +564,8 @@
     <p class="note">
       Ticks are saved in this browser only — they don't follow you to another device.
       <strong>Copy backup</strong> puts your data on the clipboard as text you can paste back
-      here later, or into the spreadsheet. Day 1 is <code>23 Aug 2026</code>.
+      here later, or into the spreadsheet. Day 1 is <code>23 Aug 2026</code>; the challenge ends
+      <code>21 Sep</code> and the calendar runs to <code>31 Dec 2026</code>.
     </p>
   </footer>
 </div>
@@ -474,13 +578,16 @@
 
   var KEY   = "coding30.v1";
   var START = new Date(2026, 7, 23);          // 23 Aug 2026, local midnight
-  var DAYS  = 30;
+  var END   = new Date(2026, 11, 31);         // 31 Dec 2026
+  var CHAL  = 30;                             // the original challenge length
   var MINS  = { p: 45, c: 45, x: 60 };
-  var TARGET_DAY = 150;
-  var TARGET_ALL = TARGET_DAY * DAYS;         // 4500 min = 75 h
+  var TARGET_DAY  = 150;
+  var DAYS        = dayDiff(START, END) + 1;  // 131
+  var TARGET_CHAL = TARGET_DAY * CHAL;        // 4500 min = 75 h
+  var TARGET_ALL  = TARGET_DAY * DAYS;        // 19650 min = 327.5 h
 
   var state = { days: {} };
-  var selected = null;                        // day number being edited
+  var selected = null;
 
   // ---------- storage (must survive private mode / blocked storage) ----------
   function load() {
@@ -498,14 +605,16 @@
   }
 
   // ---------- day helpers ----------
+  function dayDiff(a, b) { return Math.round((b - a) / 86400000); }
   function dayDate(n) {
     var d = new Date(START.getTime());
     d.setDate(d.getDate() + (n - 1));
     return d;
   }
+  function indexOf(date) { return dayDiff(START, date) + 1; }
   function todayIndex() {
     var t = new Date(); t.setHours(0, 0, 0, 0);
-    return Math.round((t - START) / 86400000) + 1;
+    return indexOf(t);
   }
   function get(n) { return state.days[n] || {}; }
   function mins(n) {
@@ -516,6 +625,16 @@
     return m;
   }
   function clean(n) { var d = get(n); return !!(d.p && d.c && d.x); }
+  function sumMins(from, to) {
+    var m = 0;
+    for (var i = from; i <= to; i++) m += mins(i);
+    return m;
+  }
+  function countClean(from, to) {
+    var c = 0;
+    for (var i = from; i <= to; i++) if (clean(i)) c++;
+    return c;
+  }
 
   function streaks() {
     var run = 0, best = 0, runs = [];
@@ -531,86 +650,166 @@
   }
 
   // ---------- rendering ----------
-  var fmtLong = new Intl.DateTimeFormat(undefined,
-    { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-  var fmtShort = new Intl.DateTimeFormat(undefined,
-    { weekday: "short", day: "numeric", month: "short" });
+  var fmtLong  = new Intl.DateTimeFormat(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  var fmtShort = new Intl.DateTimeFormat(undefined, { weekday: "short", day: "numeric", month: "short" });
+  var fmtMonth = new Intl.DateTimeFormat(undefined, { month: "long", year: "numeric" });
+  var DOW = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
   function renderHeader() {
     var t = todayIndex();
     var line = document.getElementById("dayline");
     var sub  = document.getElementById("dateline");
     if (t < 1) {
-      line.innerHTML = 'Starts soon';
+      line.textContent = "Starts soon";
       sub.textContent = "Day 1 is " + fmtLong.format(START);
     } else if (t > DAYS) {
-      line.innerHTML = 'Challenge over';
-      sub.textContent = "The 30 days ended " + fmtLong.format(dayDate(DAYS));
-    } else {
+      line.textContent = "Year complete";
+      sub.textContent = "The calendar ended " + fmtLong.format(END);
+    } else if (t <= CHAL) {
       line.innerHTML = 'Day ' + t + ' <span class="of">of 30</span>';
       sub.textContent = fmtLong.format(new Date());
+    } else {
+      line.innerHTML = 'Day ' + t + ' <span class="of">&middot; carrying on</span>';
+      sub.textContent = fmtLong.format(new Date()) + " · " + (DAYS - t) + " days left in the year";
     }
   }
 
   function renderTicks() {
     var d = get(selected);
-    var boxes = document.querySelectorAll('.tracks input');
-    for (var i = 0; i < boxes.length; i++) {
-      boxes[i].checked = !!d[boxes[i].dataset.k];
-    }
+    var boxes = document.querySelectorAll(".tracks input");
+    for (var i = 0; i < boxes.length; i++) boxes[i].checked = !!d[boxes[i].dataset.k];
+
     var t = todayIndex();
     var isToday = selected === t;
+    var label = fmtShort.format(dayDate(selected));
     document.getElementById("ticktitle").textContent =
-      isToday ? "Today · " + fmtShort.format(dayDate(selected))
-              : "Day " + selected + " · " + fmtShort.format(dayDate(selected));
+      (isToday ? "Today · " : "Day " + selected + " · ") + label;
     document.getElementById("backtoday").hidden = isToday || t < 1 || t > DAYS;
 
     var m = mins(selected);
     document.getElementById("daymins").textContent = m;
     var v = document.getElementById("verdict");
-    if (m >= TARGET_DAY)  { v.textContent = "Day conquered";      v.dataset.s = "done"; }
+    if (m >= TARGET_DAY)  { v.textContent = "Day conquered";        v.dataset.s = "done"; }
     else if (m > 0)       { v.textContent = "Partial — keep going"; v.dataset.s = "part"; }
-    else                  { v.textContent = "Nothing logged yet";  v.dataset.s = "none"; }
+    else                  { v.textContent = "Nothing logged yet";   v.dataset.s = "none"; }
+  }
+
+  function renderChallenge() {
+    var t = todayIndex();
+    var chalMins = sumMins(1, CHAL);
+    var pct = Math.min(1, chalMins / TARGET_CHAL);
+    var full = countClean(1, CHAL);
+
+    document.getElementById("chal-fill").style.width = (pct * 100).toFixed(1) + "%";
+    document.getElementById("chal-meter").classList.toggle("is-done", pct >= 1);
+    document.getElementById("chal-hours").textContent = (chalMins / 60).toFixed(1);
+    document.getElementById("chal-days").textContent = full;
+
+    var pos = document.getElementById("chal-pos");
+    var pace = document.getElementById("chal-pace");
+
+    if (t < 1) {
+      pos.textContent = "Starts " + fmtShort.format(START);
+      pace.textContent = "Not started yet"; pace.dataset.s = "ok";
+      return;
+    }
+    if (t > CHAL) {
+      pos.textContent = "Ended " + fmtShort.format(dayDate(CHAL));
+      if (pct >= 1)      { pace.textContent = "Challenge complete — all 75 hours"; pace.dataset.s = "ahead"; }
+      else               { pace.textContent = "Finished at " + Math.round(pct * 100) + "%"; pace.dataset.s = "behind"; }
+      return;
+    }
+
+    pos.textContent = "Day " + t + " of " + CHAL;
+    // Days that are already over — today doesn't count against you until midnight.
+    var elapsed = t - 1;
+    if (elapsed === 0) { pace.textContent = "Day 1 — off we go"; pace.dataset.s = "ok"; return; }
+    var owed = elapsed * TARGET_DAY;
+    var diff = (chalMins - owed) / 60;
+    if (diff >= 0.25)       { pace.textContent = diff.toFixed(1) + " h ahead of pace"; pace.dataset.s = "ahead"; }
+    else if (diff > -0.25)  { pace.textContent = "Right on pace";                      pace.dataset.s = "ok"; }
+    else if (diff >= -2.5)  { pace.textContent = (-diff).toFixed(1) + " h behind";     pace.dataset.s = "behind"; }
+    else                    { pace.textContent = (-diff).toFixed(1) + " h behind";     pace.dataset.s = "late"; }
   }
 
   function renderStats() {
-    var total = 0, full = 0;
-    for (var i = 1; i <= DAYS; i++) { total += mins(i); if (clean(i)) full++; }
+    var total = sumMins(1, DAYS);
     var s = streaks();
     document.getElementById("v-streak").innerHTML = s.current + '<small> d</small>';
-    document.getElementById("s-streak").title = "Longest streak: " + s.best + " days";
-    document.getElementById("v-days").innerHTML  = full + '<small> /30</small>';
-    document.getElementById("v-hours").innerHTML = (total / 60).toFixed(1) + '<small> /75</small>';
-    document.getElementById("v-pct").innerHTML   = Math.round(total / TARGET_ALL * 100) + '<small>%</small>';
+    document.getElementById("v-best").innerHTML   = s.best + '<small> d</small>';
+    document.getElementById("v-days").innerHTML   = countClean(1, DAYS) + '<small> /' + DAYS + '</small>';
+    document.getElementById("v-hours").innerHTML  = (total / 60).toFixed(1) +
+      '<small> /' + Math.round(TARGET_ALL / 60) + '</small>';
+    document.getElementById("s-hours").title =
+      "Target is " + (TARGET_ALL / 60).toFixed(1) + " h across all " + DAYS + " days";
   }
 
-  function renderGrid() {
-    var grid = document.getElementById("grid");
+  function renderCalendar() {
     var t = todayIndex();
-    var html = "";
-    for (var i = 1; i <= DAYS; i++) {
-      var d = get(i), m = mins(i), st;
-      if (m >= TARGET_DAY) st = "done";
-      else if (m > 0)      st = "partial";
-      else if (i < t)      st = "missed";
-      else                 st = "future";
-      html += '<button class="cell" type="button" data-day="' + i + '"' +
-              ' data-state="' + st + '"' +
-              (i === t ? ' data-today="1"' : '') +
-              (i === selected ? ' data-sel="1"' : '') +
-              ' aria-label="Day ' + i + ', ' + fmtShort.format(dayDate(i)) + '">' +
-                '<span class="d">' + i + '</span>' +
-                '<span class="pips">' +
-                  '<span class="pip"' + (d.p ? ' data-on="p"' : '') + '></span>' +
-                  '<span class="pip"' + (d.c ? ' data-on="c"' : '') + '></span>' +
-                  '<span class="pip"' + (d.x ? ' data-on="x"' : '') + '></span>' +
-                '</span>' +
-              '</button>';
+    var out = "";
+    var cursor = new Date(START.getFullYear(), START.getMonth(), 1);
+    var last = new Date(END.getFullYear(), END.getMonth(), 1);
+
+    while (cursor <= last) {
+      var y = cursor.getFullYear(), m = cursor.getMonth();
+      var inMonth = new Date(y, m + 1, 0).getDate();
+      var lead = new Date(y, m, 1).getDay();          // 0 = Sunday
+      var cells = "", done = 0, tracked = 0;
+
+      for (var b = 0; b < lead; b++) cells += '<span class="cal-blank"></span>';
+
+      for (var dom = 1; dom <= inMonth; dom++) {
+        var date = new Date(y, m, dom);
+        var n = indexOf(date);
+        var live = n >= 1 && n <= DAYS;
+        if (!live) {
+          cells += '<button class="cal-cell" type="button" disabled aria-hidden="true">' +
+                     '<span class="dom">' + dom + '</span></button>';
+          continue;
+        }
+        tracked++;
+        var d = get(n), mm = mins(n), st;
+        if (mm >= TARGET_DAY)   { st = "done"; done++; }
+        else if (mm > 0)        { st = "partial"; }
+        else if (n < t)         { st = "missed"; }
+        else                    { st = "future"; }
+
+        cells += '<button class="cal-cell" type="button" data-day="' + n + '"' +
+                 ' data-state="' + st + '"' +
+                 (n <= CHAL ? ' data-chal="1"' : '') +
+                 (n === t ? ' data-today="1"' : '') +
+                 (n === selected ? ' data-sel="1"' : '') +
+                 ' aria-label="' + fmtShort.format(date) + ', ' + mm + ' of 150 minutes">' +
+                   (n <= CHAL ? '<span class="cd">D' + n + '</span>' : '') +
+                   '<span class="dom">' + dom + '</span>' +
+                   '<span class="pips">' +
+                     '<span class="pip"' + (d.p ? ' data-on="p"' : '') + '></span>' +
+                     '<span class="pip"' + (d.c ? ' data-on="c"' : '') + '></span>' +
+                     '<span class="pip"' + (d.x ? ' data-on="x"' : '') + '></span>' +
+                   '</span>' +
+                 '</button>';
+      }
+
+      out += '<div class="cal-month">' +
+               '<div class="cal-head">' +
+                 '<span class="m">' + fmtMonth.format(new Date(y, m, 1)) + '</span>' +
+                 '<span class="c">' + done + ' / ' + tracked + ' full</span>' +
+               '</div>' +
+               '<div class="dows">' + DOW.map(function (x) { return "<span>" + x + "</span>"; }).join("") + '</div>' +
+               '<div class="cal-grid">' + cells + '</div>' +
+             '</div>';
+
+      cursor = new Date(y, m + 1, 1);
     }
-    grid.innerHTML = html;
+    document.getElementById("calendar").innerHTML = out;
   }
 
-  function render() { renderHeader(); renderTicks(); renderStats(); renderGrid(); }
+  function render() {
+    renderHeader(); renderTicks(); renderChallenge(); renderStats(); renderCalendar();
+  }
+  function refresh() {
+    renderTicks(); renderChallenge(); renderStats(); renderCalendar();
+  }
 
   // ---------- interaction ----------
   var toastTimer;
@@ -629,20 +828,20 @@
     if (e.target.checked) d[k] = 1; else delete d[k];
     if (!d.p && !d.c && !d.x) delete state.days[selected];
     save();
-    renderTicks(); renderStats(); renderGrid();
+    refresh();
   });
 
-  document.getElementById("grid").addEventListener("click", function (e) {
-    var cell = e.target.closest(".cell");
-    if (!cell) return;
+  document.getElementById("calendar").addEventListener("click", function (e) {
+    var cell = e.target.closest(".cal-cell");
+    if (!cell || cell.disabled) return;
     selected = Number(cell.dataset.day);
-    renderTicks(); renderGrid();
+    renderTicks(); renderCalendar();
     document.querySelector(".panel").scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
   document.getElementById("backtoday").addEventListener("click", function () {
     selected = todayIndex();
-    renderTicks(); renderGrid();
+    renderTicks(); renderCalendar();
   });
 
   document.getElementById("copy").addEventListener("click", function () {
@@ -672,7 +871,7 @@
   });
 
   document.getElementById("reset").addEventListener("click", function () {
-    if (!window.confirm("Clear every tick for all 30 days? This can't be undone.")) return;
+    if (!window.confirm("Clear every tick for all " + DAYS + " days? This can't be undone.")) return;
     state.days = {};
     save(); render();
     toast("All ticks cleared");
@@ -680,8 +879,8 @@
 
   // ---------- boot ----------
   load();
-  var t = todayIndex();
-  selected = t < 1 ? 1 : (t > DAYS ? DAYS : t);
+  var t0 = todayIndex();
+  selected = t0 < 1 ? 1 : (t0 > DAYS ? DAYS : t0);
   render();
 })();
 </script>
